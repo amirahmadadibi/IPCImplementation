@@ -80,11 +80,4 @@ public class MassengerActivity extends AppCompatActivity {
         unbindService(serviceConnection);
     }
 
-    public void sendObjectToBoundService(View view) {
-        Car car = new Car("red",1200);
-        Message message = Message.obtain(null,44);
-        message.setData();
-        mMessenger.send(car);
-
-    }
 }
