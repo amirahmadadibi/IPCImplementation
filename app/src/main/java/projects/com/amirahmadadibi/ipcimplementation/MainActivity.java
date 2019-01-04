@@ -14,33 +14,10 @@ import projects.com.amirahmadadibi.ipcimplementation.services.MyBoundService;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "service";
-    private MyBoundService myBoundService;
-    private final ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MyBoundService.ServiceBinder serviceBinder = (MyBoundService.ServiceBinder) service;
-            myBoundService = serviceBinder.getService();
-            Log.i(TAG, "onServiceConnected: initialization complete");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            if (myBoundService != null) {
-                //cleaning up
-                myBoundService = null;
-            }
-            Log.i(TAG, "onServiceDisconnected: reset service filed");
-        }
-    };
-
 
     @Override
     protected void onStart() {
         super.onStart();
-        //binding process
-        Intent boundServiceIntent = new Intent(this, MyBoundService.class);
-        //Context.BIND_AUTO_CREATE -> automatic creation of service after binding
-        bindService(boundServiceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -51,14 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void useBSNormaly(View view) {
-        Log.i(TAG, "useBSNormaly: " + myBoundService.doSomeWork());
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(serviceConnection);
-        Log.i(TAG, "onStop: unbind BoundService");
     }
 }
