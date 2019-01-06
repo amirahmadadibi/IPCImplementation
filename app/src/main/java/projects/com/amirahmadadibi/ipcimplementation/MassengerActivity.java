@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import projects.com.amirahmadadibi.ipcimplementation.model.Car;
 import projects.com.amirahmadadibi.ipcimplementation.services.MyBoundService;
@@ -27,6 +28,7 @@ public class MassengerActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mMessenger = new Messenger(service);
             isBinded = true;
+            Toast.makeText(MassengerActivity.this, "bounded", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -41,7 +43,7 @@ public class MassengerActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        //best place to bind BoundService
     }
 
     @Override
@@ -51,23 +53,21 @@ public class MassengerActivity extends AppCompatActivity {
         mTxtResult = findViewById(R.id.txt_result);
         mEdtNumber1 = findViewById(R.id.edt_num1);
         mEdtNumber2 = findViewById(R.id.edt_num_2);
-
     }
 
     public void performAddOperation(View view) {
         int num1 = Integer.valueOf(mEdtNumber1.getText().toString());
         int num2 = Integer.valueOf(mEdtNumber2.getText().toString());
-//        mTxtResult.setText(myBoundService.addNumbers(num1,num2) + "");
         Message messageToService = Message.obtain(null, 43);
         Bundle bundle = new Bundle();
         bundle.putInt("numOne", num1);
         bundle.putInt("numTwo", num2);
         messageToService.setData(bundle);
-        try {
-            mMessenger.send(messageToService);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+            try {
+                mMessenger.send(messageToService);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
     }
 
     public void onBindService(View view) {
@@ -80,4 +80,9 @@ public class MassengerActivity extends AppCompatActivity {
         unbindService(serviceConnection);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //best place for unBind BoundService
+    }
 }
